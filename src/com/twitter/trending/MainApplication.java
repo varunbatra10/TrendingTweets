@@ -1,33 +1,45 @@
 package com.twitter.trending;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
- * @description This application is to get top trending hashtags from inputs taken from the user
+ * @description This application is to get top trending hashtags from inputs
+ *              taken from the user
  * @author varunbatra
  *
  */
 public class MainApplication {
- static HashMap<String, Integer> countMap;
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		MainApplication app = new MainApplication();
 		System.out.print("Enter Tweet or Press N/n to terminate:");
 		String input = sc.nextLine().trim();
-		countMap = new HashMap<>();
+		HashMap<String, Integer> countMap = new HashMap<>();
 		while (!(input.equals("N") || input.equals("n"))) {
 			if (input.contains("#")) {
-				countMap = app.getHashTagsInMap(input);
+				countMap = app.getHashTagsInMap(input, countMap);
 			}
-			System.out.print("Enter another Tweet or Press N to terminate:");
+			System.out.print("Enter another Tweet or Press N/n to terminate:");
 			input = sc.nextLine().trim();
 		}
 		sc.close();
-		app.showTrendingHashTags();
+
+		// Display Trending Hashtags
+		if (!countMap.isEmpty()) {
+			System.out.println("Trending Hashtags on Twitter:");
+			ArrayList<String> trend = app.getTrendingHashTags(countMap);
+			for (int i = 0; i < trend.size(); i++) {
+				System.out.println((i+1) + ". #" + trend.get(i));
+			}
+		}
 	}
 
 	/**
@@ -35,14 +47,21 @@ public class MainApplication {
 	 * @param input string
 	 * @return
 	 */
-	HashMap<String, Integer> getHashTagsInMap(String input) {
-		String splitArray[] = input.split("#");
+	HashMap<String, Integer> getHashTagsInMap(String input, HashMap<String, Integer> countMap) {
+		String hash = "#";
+		HashSet<String> unique = new HashSet<>();
+		String splitArray[] = input.split(hash);
 		for (int i = 0; i < splitArray.length; i++) {
 			String str = splitArray[i].trim();
-			if (!str.isEmpty() && (i > 0 || (input.startsWith("#") && i == 0))) {
+			if (!str.isEmpty() && input.contains(hash + str)) {
 				String a = str.split(" ")[0];
-				countMap.put(a.trim(), countMap.get(a) != null ? countMap.get(a) + 1 : 1);
+				unique.add(a.trim());
 			}
+		}
+		Iterator<String> itr = unique.iterator();
+		while (itr.hasNext()) {
+			String a = itr.next().toLowerCase();
+			countMap.put(a, countMap.get(a) != null ? countMap.get(a) + 1 : 1);
 		}
 		return countMap;
 	}
@@ -53,23 +72,23 @@ public class MainApplication {
 	 * @param countMap
 	 * @return type is null as we need to only show trending hashtags
 	 */
-	void showTrendingHashTags() {
+	ArrayList<String> getTrendingHashTags(HashMap<String, Integer> countMap) {
+		ArrayList<String> trend = new ArrayList<String>();
 		if (!countMap.isEmpty()) {
 			// Sort Map by values
-			Map<String, Integer> sortedByCount = countMap.entrySet().stream()
+			LinkedHashMap<String, Integer> sortedByCount = countMap.entrySet().stream()
 					.sorted((Map.Entry.<String, Integer>comparingByValue().reversed())).collect(Collectors
 							.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-			int count = 1;
-			// Display Trending Hashtags
-			System.out.println("Trending Hashtags on Twitter:");
-			for (Map.Entry<String, Integer> entryMap : sortedByCount.entrySet()) {
-				if (count <= 10) {
-					System.out.println(count + ". " + entryMap.getKey());
-					count++;
+			if (!sortedByCount.isEmpty()) {
+				int count = 1;
+				for (Map.Entry<String, Integer> entryMap : sortedByCount.entrySet()) {
+					if (count <= 10) {
+						trend.add(entryMap.getKey());
+						count++;
+					}
 				}
 			}
 		}
+		return trend;
 	}
-
 }
