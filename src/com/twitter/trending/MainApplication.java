@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 /**
- * @description This application is to get top trending hashtags from inputs
+ * @description This application is to get top trending HashTags from inputs
  *              taken from the user
  * @author varunbatra
  *
@@ -43,9 +43,9 @@ public class MainApplication {
 	}
 
 	/**
-	 * @description Method to extract hashtags from string and maintain count
+	 * @description Method to extract HashTags from string and maintain count
 	 * @param input string
-	 * @return
+	 * @return HashMap with count of HashTags
 	 */
 	HashMap<String, Integer> getHashTagsInMap(String input, HashMap<String, Integer> countMap) {
 		String hash = "#";
@@ -67,10 +67,10 @@ public class MainApplication {
 	}
 
 	/**
-	 * @description Method to get trending hashtags by count in map --I didn't
-	 *              mention 10 as the inputs could contain less than 10 hashtags
+	 * @description Method to get trending HashTags by count in map --I didn't
+	 *              mention 10 as the inputs could contain less than 10 HashTags
 	 * @param countMap
-	 * @return type is null as we need to only show trending hashtags
+	 * @return type is list which has 10 or less than 10 trending HashTags based on user input
 	 */
 	ArrayList<String> getTrendingHashTags(HashMap<String, Integer> countMap) {
 		ArrayList<String> trend = new ArrayList<String>();
