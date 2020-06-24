@@ -25,8 +25,13 @@ class TestApplication {
 		countMap = app.getHashTagsInMap("#dhOni ###hArdik # #   ##  #   ", countMap);
 		countMap = app.getHashTagsInMap("# love###dhoni  #hardik #Yuvi", countMap);
 		countMap = app.getHashTagsInMap(" I love #dhoni #sAchin", countMap);
+		countMap = app.getHashTagsInMap("Love #workout #motivation", countMap);
+		countMap = app.getHashTagsInMap(" I love #photography", countMap);
+		countMap = app.getHashTagsInMap(" I love #dhoni #happybirthday", countMap);
+		countMap = app.getHashTagsInMap(" I love #pets #petlover", countMap);
 		ArrayList<String> list = app.getTrendingHashTags(countMap);
-		Assert.assertArrayEquals(new Object[] { "dhoni", "hardik", "sachin", "yuvi" }, list.toArray());
+		Assert.assertArrayEquals(new Object[] { "dhoni", "hardik", "sachin", "pets", "petlover",
+				"happybirthday", "workout", "yuvi", "motivation", "photography" }, list.toArray());
 	}
 
 }
